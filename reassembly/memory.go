@@ -1,4 +1,4 @@
-// Copyright 2012 Google, Inc. All rights reserved.
+// Copyright 2012-2023 Google, Inc. All rights reserved.
 //
 // Use of this source code is governed by a BSD-style license
 // that can be found in the LICENSE file in the root of the source
@@ -195,7 +195,6 @@ func (p *StreamPool) getConnection(k key, end bool, ts time.Time, tcp *layers.TC
 	}
 	p.mu.Lock()
 	defer p.mu.Unlock()
-	conn, half, rev = p.newConnection(k, s, ts)
 	conn2, half2, rev2 := p.getHalf(k)
 	if conn2 != nil {
 		if conn2.key != k {
@@ -204,6 +203,7 @@ func (p *StreamPool) getConnection(k key, end bool, ts time.Time, tcp *layers.TC
 		// FIXME: delete s ?
 		return conn2, half2, rev2
 	}
+	conn, half, rev = p.newConnection(k, s, ts)
 	p.conns[k] = conn
 	return conn, half, rev
 }

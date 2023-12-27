@@ -1,4 +1,4 @@
-// Copyright 2012 Google, Inc. All rights reserved.
+// Copyright 2012-2023 Google, Inc. All rights reserved.
 //
 // Use of this source code is governed by a BSD-style license
 // that can be found in the LICENSE file in the root of the source
@@ -1201,8 +1201,10 @@ func (a *Assembler) closeHalfConnection(conn *connection, half *halfconnection) 
 		log.Printf("%v closing", conn)
 	}
 	half.closed = true
-	for p := half.first; p != nil; p = p.next {
+	var next *page
+	for p := half.first; p != nil; p = next {
 		// FIXME: it should be already empty
+		next = p.next
 		a.pc.replace(p)
 		half.pages--
 	}
