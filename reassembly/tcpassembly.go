@@ -1,4 +1,4 @@
-// Copyright 2012-2023 Google, Inc. All rights reserved.
+// Copyright 2012-2024 Google, Inc. All rights reserved.
 //
 // Use of this source code is governed by a BSD-style license
 // that can be found in the LICENSE file in the root of the source
@@ -1207,6 +1207,11 @@ func (a *Assembler) closeHalfConnection(conn *connection, half *halfconnection) 
 		next = p.next
 		a.pc.replace(p)
 		half.pages--
+	}
+	for p := half.saved; p != nil; p = next {
+		// FIXME: it should be already empty
+		next = p.next
+		a.pc.replace(p)
 	}
 	if conn.s2c.closed && conn.c2s.closed {
 		if half.stream.ReassemblyComplete(nil) { //FIXME: which context to pass ?
