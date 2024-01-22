@@ -1190,6 +1190,10 @@ func (a *Assembler) skipFlush(conn *connection, half *halfconnection) {
 	}
 	a.ret = a.ret[:0]
 	a.addNextFromConn(half)
+	if len(a.ret) == 0 {
+		a.closeHalfConnection(conn, half)
+		return
+	}
 	nextSeq := a.sendToConnection(conn, half, a.ret[0].assemblerContext())
 	if nextSeq != invalidSequence {
 		half.nextSeq = nextSeq
